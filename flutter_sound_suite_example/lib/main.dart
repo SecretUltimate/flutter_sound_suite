@@ -16,14 +16,14 @@ class _FlutterSoundSuiteAppState extends State<FlutterSoundSuiteApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter sound suite Demo',
+      title: 'Flutter Sound Suite Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Flutter sound suite Demo'),
+          title: Text('Flutter Sound Suite Demo'),
         ),
         body: ChangeNotifierProvider(
           create: (context) => SoundPlayerModel(),
