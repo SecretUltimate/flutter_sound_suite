@@ -10,7 +10,7 @@ class SoundPlayerWidget extends StatefulWidget {
   final double duration;
   final Codec codec;
 
-  SoundPlayerWidget({@required this.filePath, @required this.fileName, @required this.duration, this.codec: Codec.amrNB});
+  SoundPlayerWidget({@required this.filePath, @required this.fileName, @required this.duration, this.codec: Codec.aacADTS});
 
   @override
   _SoundPlayerWidgetState createState() => _SoundPlayerWidgetState();

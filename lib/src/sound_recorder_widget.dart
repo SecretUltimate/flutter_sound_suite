@@ -9,32 +9,32 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
-typedef RecordCompleteObserver = Function(String filePath, String fileName, double length);
+typedef RecordCompleteCallback = Function(String filePath, String fileName, double duration);
 
-///                 AAC_ADS Opus_OGG  Opus_CAF  MP3  Vorbis_OGG  PCM_raw  PCM_WAV  PCM_AIFF  PCM_CAF  FLAC  AAC_MP4 AMR-NB  AMR-WB
+///see[Codec]       AAC_ADS Opus_OGG  Opus_CAF  MP3  Vorbis_OGG  PCM_raw  PCM_WAV  PCM_AIFF  PCM_CAF  FLAC  AAC_MP4 AMR-NB  AMR-WB
 ///iOS encoder      Yes     Yes(*)    Yes       No   No          No       Yes      No        Yes      Yes   Yes     NO      NO
 ///iOS decoder      Yes     Yes(*)    Yes       Yes  No          No       Yes      Yes       Yes      Yes   Yes     NO      NO
 ///Android encoder  Yes     No        No        No   No          Yes      Yes      No        No       No    No      YES     YES
 ///Android decoder  Yes     Yes       Yes(*)    Yes  Yes         Yes      Yes      Yes(*)    Yes(*)   Yes   Yes     YES     YES
 
 class SoundRecorderWidget extends StatefulWidget {
-  final RecordCompleteObserver recordComplete;
+  final RecordCompleteCallback recordComplete;
   final Codec codec;
 
-  SoundRecorderWidget({@required this.recordComplete, this.codec: Codec.amrNB});
+  SoundRecorderWidget({@required this.recordComplete, this.codec: Codec.aacADTS});
 
   @override
   _SoundRecorderWidgetState createState() => new _SoundRecorderWidgetState();
 }
 
 class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
-  double startY = 0.0;
-  double offset = 0.0;
-  bool isCancel = false;
+  double _startY = 0.0;
+  double _offset = 0.0;
+  bool _isCancel = false;
   String _buttonHint = '按住 说话';
   String _overLayHint = '上滑 取消';
   String _voiceImage = 'assets/voice/volume_1.png';
-  OverlayEntry overlayEntry;
+  OverlayEntry _overlayEntry;
   String _recordTime = '00:00:00';
   bool _isRecording = false;
 
@@ -128,9 +128,7 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
             } else {
               _voiceImage = 'assets/voice/volume_1.png';
             }
-            if (overlayEntry != null) {
-              overlayEntry.markNeedsBuild();
-            }
+            _overlayEntry?.markNeedsBuild();
           });
         }
       });
@@ -157,7 +155,7 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       debugPrint('stopRecorder');
       releaseRecorderSubscriptions();
       Duration duration = await flutterSoundHelper.duration(_currentFilePath);
-      if (widget.recordComplete != null && !isCancel) {
+      if (widget.recordComplete != null && !_isCancel) {
         widget.recordComplete.call(_currentFilePath, _currentFileName, (duration?.inMilliseconds ?? 0) / 1000.0);
       }
     } catch (err) {
@@ -180,14 +178,14 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onLongPressStart: (details) {
-        startY = details.globalPosition.dy;
+        _startY = details.globalPosition.dy;
         showOverlay();
       },
       onLongPressEnd: (details) {
         hideOverlay();
       },
       onLongPressMoveUpdate: (details) {
-        offset = details.globalPosition.dy;
+        _offset = details.globalPosition.dy;
         updateStatus();
       },
       child: Container(
@@ -224,15 +222,15 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
     });
 
     stopRecorder();
-    if (overlayEntry != null) {
-      overlayEntry.remove();
-      overlayEntry = null;
+    if (_overlayEntry != null) {
+      _overlayEntry.remove();
+      _overlayEntry = null;
     }
   }
 
   insertOverLay(BuildContext context) {
-    if (overlayEntry == null) {
-      overlayEntry = OverlayEntry(builder: (content) {
+    if (_overlayEntry == null) {
+      _overlayEntry = OverlayEntry(builder: (content) {
         return Positioned(
           top: MediaQuery.of(context).size.height * 0.5 - 80,
           left: MediaQuery.of(context).size.width * 0.5 - 80,
@@ -277,14 +275,14 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
           ),
         );
       });
-      Overlay.of(context).insert(overlayEntry);
+      Overlay.of(context).insert(_overlayEntry);
     }
   }
 
   updateStatus() {
     setState(() {
-      isCancel = startY - offset > 100 ? true : false;
-      if (isCancel) {
+      _isCancel = _startY - _offset > 100 ? true : false;
+      if (_isCancel) {
         _buttonHint = '松开 取消';
         _overLayHint = '下滑 继续';
         if (_recorder.isRecording) {
