@@ -24,12 +24,16 @@ class _SoundPlayerWidgetState extends State<SoundPlayerWidget> {
       width: 80 + widget.duration * 10.0,
       child: InkWell(
         borderRadius: BorderRadius.circular(4),
-        onTap: () => Provider.of<SoundPlayerModel>(context, listen: false).startOrStopPlayer(filePath: widget.filePath, fileName: widget.fileName),
+        onTap: () => Provider.of<SoundPlayerModel>(context, listen: false).startOrStopPlayer(
+          filePath: widget.filePath,
+          fileName: widget.fileName,
+          codec: widget.codec,
+        ),
         child: Stack(
           alignment: Alignment.centerLeft,
           children: [
             Visibility(
-              visible: Provider.of<SoundPlayerModel>(context).isCurrentPlaying(path: widget.filePath),
+              visible: Provider.of<SoundPlayerModel>(context).isCurrentPlaying(filePath: widget.filePath),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
@@ -45,7 +49,7 @@ class _SoundPlayerWidgetState extends State<SoundPlayerWidget> {
                 SizedBox(
                   width: 6,
                 ),
-                Icon(Provider.of<SoundPlayerModel>(context).isCurrentPlaying(path: widget.filePath) ? Icons.stop : Icons.play_arrow),
+                Icon(Provider.of<SoundPlayerModel>(context).isCurrentPlaying(filePath: widget.filePath) ? Icons.stop : Icons.play_arrow),
                 SizedBox(
                   width: 6,
                 ),

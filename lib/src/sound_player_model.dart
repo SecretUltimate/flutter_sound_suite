@@ -7,18 +7,22 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 
 class SoundPlayerModel with ChangeNotifier {
-  Dio dio = Dio(BaseOptions(
-    connectTimeout: const Duration(seconds: 10).inMilliseconds,
-    receiveTimeout: const Duration(minutes: 60).inMilliseconds,
-  ));
   FlutterSoundPlayer _player = FlutterSoundPlayer();
   StreamSubscription _playerSubscription;
   double _currentPlayTime = 0.0;
   double _currentDuration = 0.0;
-
   double get currentPlayTime => _currentPlayTime;
-
   double get currentDuration => _currentDuration;
+
+  ///maybe remote or local file path
+  String _currentPlayingPath;
+
+  Dio dio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 10).inMilliseconds,
+    receiveTimeout: const Duration(minutes: 60).inMilliseconds,
+  ));
+  bool _isDownloading = false;
+  bool get isDownloading => _isDownloading;
 
   SoundPlayerModel() {
     init();
@@ -34,50 +38,46 @@ class SoundPlayerModel with ChangeNotifier {
   @override
   dispose() {
     super.dispose();
-    releasePlayerSubscriptions();
-    releasePlayer();
+    _releasePlayerSubscriptions();
+    _releasePlayer();
     dio.close(force: true);
   }
 
-  bool _isLoading = false;
-
-  String _currentPlayingPath;
-
-  bool isCurrentPlaying({@required String path}) => _player.isPlaying && _currentPlayingPath == path;
+  bool isCurrentPlaying({@required String filePath}) => _player.isPlaying && _currentPlayingPath == filePath;
 
   bool isPlayerStopped() => _player.isStopped;
 
-  bool get isLoading => _isLoading;
-
-  startOrStopPlayer({String filePath, String fileName}) async {
+  startOrStopPlayer({String filePath, String fileName, Codec codec}) async {
     _currentPlayingPath = filePath;
     Directory tempDir = await getTemporaryDirectory();
     String localPath = '${tempDir.path}/$fileName';
     File localFile = File(localPath);
     debugPrint('startOrStopPlayer $_currentPlayingPath local_exists ${localFile.existsSync()}');
     if (!localFile.existsSync()) {
+      _isDownloading = true;
+      notifyListeners();
       await dio.download(_currentPlayingPath, localPath);
+      _isDownloading = false;
+      notifyListeners();
     }
     if (localFile.existsSync()) {
       Duration duration = await flutterSoundHelper.duration(localPath);
       _currentDuration = (duration?.inMilliseconds ?? 0) / 1000.0;
       debugPrint('startOrStopPlayer $_currentPlayingPath download to $localPath _currentDuration $_currentDuration');
       if (_player.isStopped) {
-        startPlayer(path: localPath);
+        startPlayer(path: localPath, codec: codec);
       } else {
         stopPlayer();
       }
     }
   }
 
-  releasePlayerSubscriptions() {
-    if (_playerSubscription != null) {
-      _playerSubscription.cancel();
-      _playerSubscription = null;
-    }
+  _releasePlayerSubscriptions() {
+    _playerSubscription?.cancel();
+    _playerSubscription = null;
   }
 
-  releasePlayer() async {
+  _releasePlayer() async {
     try {
       await _player.closeAudioSession();
     } catch (e) {
@@ -87,7 +87,7 @@ class SoundPlayerModel with ChangeNotifier {
   }
 
   _addListeners() {
-    releasePlayerSubscriptions();
+    _releasePlayerSubscriptions();
     _playerSubscription = _player.onProgress.listen((event) {
       if (event != null) {
         _currentPlayTime = event.position.inMilliseconds / 1000.0;
@@ -96,7 +96,7 @@ class SoundPlayerModel with ChangeNotifier {
     });
   }
 
-  startPlayer({@required String path, Codec codec: Codec.amrNB}) async {
+  startPlayer({@required String path, Codec codec: Codec.aacADTS}) async {
     try {
       await _player.startPlayer(
           fromURI: path,
@@ -117,29 +117,21 @@ class SoundPlayerModel with ChangeNotifier {
     try {
       await _player.stopPlayer();
       debugPrint('stopPlayer');
-      if (_playerSubscription != null) {
-        _playerSubscription.cancel();
-        _playerSubscription = null;
-      }
+      _releasePlayerSubscriptions();
     } catch (err) {
       debugPrint('error: $err');
     }
     notifyListeners();
   }
 
-  pauseResumePlayer() {
+  pauseResumePlayer() async {
     if (_player.isPlaying) {
-      _player.pausePlayer();
+      await _player.pausePlayer();
     } else {
-      _player.resumePlayer();
+      await _player.resumePlayer();
     }
+    notifyListeners();
   }
 
-  seekToPlayer(int milliSecs) async => await _player.seekToPlayer(Duration(milliseconds: milliSecs));
-
-  onPauseResumePlayer() => (_player.isPlaying || _player.isPaused) ? pauseResumePlayer : null;
-
-  onStopPlayer() => (_player.isPlaying || _player.isPaused) ? stopPlayer : null;
-
-  onStartPlayer() => (_player.isStopped) ? startPlayer : null;
+  seekToPlayer(int milliSeconds) async => await _player.seekToPlayer(Duration(milliseconds: milliSeconds));
 }
