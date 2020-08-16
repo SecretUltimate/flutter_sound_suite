@@ -1,0 +1,40 @@
+name: flutter_sound_suite
+description: a flutter sound suite for record and play voice easily
+version: 0.0.1
+author: chanyunyu@vip.qq.com
+homepage: https://github.com/chanyunyu
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.17.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: ^3.0.10
+  provider: ^4.3.2
+  flutter_sound: ^5.1.1
+  permission_handler: ^5.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  assets:
+    - assets/voice/volume_1.png
+    - assets/voice/volume_2.png
+    - assets/voice/volume_3.png
+    - assets/voice/volume_4.png
+    - assets/voice/volume_5.png
+    - assets/voice/volume_6.png
+    - assets/voice/volume_7.png
