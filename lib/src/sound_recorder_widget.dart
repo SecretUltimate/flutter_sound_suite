@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
-typedef RecordCompleteObserver = Function(String path, double length);
+typedef RecordCompleteObserver = Function(String filePath, String fileName, double length);
 
 ///                 AAC_ADS Opus_OGG  Opus_CAF  MP3  Vorbis_OGG  PCM_raw  PCM_WAV  PCM_AIFF  PCM_CAF  FLAC  AAC_MP4 AMR-NB  AMR-WB
 ///iOS encoder      Yes     Yes(*)    Yes       No   No          No       Yes      No        Yes      Yes   Yes     NO      NO
@@ -42,7 +42,8 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
   StreamSubscription _recorderSubscription;
   double _decibels;
   Codec _codec = Codec.aacADTS;
-  String _currentPath;
+  String _currentFilePath;
+  String _currentFileName;
 
   init() async {
     _codec = widget.codec;
@@ -93,9 +94,10 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       }
 
       Directory tempDir = await getTemporaryDirectory();
-      _currentPath = '${tempDir.path}/${Uuid().v4()}${ext[_codec.index]}';
+      _currentFileName = '${Uuid().v4()}${ext[_codec.index]}';
+      _currentFilePath = '${tempDir.path}/$_currentFileName';
       await _recorder.startRecorder(
-        toFile: _currentPath,
+        toFile: _currentFilePath,
         codec: _codec,
       );
       debugPrint('startRecorder');
@@ -154,9 +156,9 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       await _recorder.stopRecorder();
       debugPrint('stopRecorder');
       releaseRecorderSubscriptions();
-      Duration duration = await flutterSoundHelper.duration(_currentPath);
+      Duration duration = await flutterSoundHelper.duration(_currentFilePath);
       if (widget.recordComplete != null && !isCancel) {
-        widget.recordComplete.call(_currentPath, (duration?.inMilliseconds ?? 0) / 1000.0);
+        widget.recordComplete.call(_currentFilePath, _currentFileName, (duration?.inMilliseconds ?? 0) / 1000.0);
       }
     } catch (err) {
       debugPrint('stopRecorder error: $err');
