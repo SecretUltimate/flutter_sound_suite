@@ -1,11 +1,11 @@
 # flutter_sound_suite
 a flutter sound suite for record and play voice  easily!
-##dependencies:
-###dio: ^3.0.10
+## dependencies:
+### dio: ^3.0.10
 
-###provider: ^4.3.2
+### provider: ^4.3.2
 
-###flutter_sound: ^5.1.1
+### flutter_sound: ^5.1.1
 #### Actually, the following codecs are supported by flutter_sound:
 
 |                 | AAC ADS | Opus OGG | Opus CAF | MP3 | Vorbis OGG | PCM raw| PCM WAV | PCM AIFF | PCM CAF | FLAC | AAC MP4 | AMR-NB | AMR-WB |
@@ -22,4 +22,4 @@ Yes(*) : The codec is supported by Flutter Sound, but with a File Format Convers
 - Can add some delay before Playing Back the file, or after stopping the recording. This delay can be substancial for very large records.
 
 -------------------------------------------------------------------------------------------------------------------------------------
-###permission_handler: ^5.0.1
+### permission_handler: ^5.0.1
