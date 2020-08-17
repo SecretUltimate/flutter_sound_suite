@@ -55,6 +55,10 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
     );
     await _recorder.setSubscriptionDuration(Duration(milliseconds: 10));
     initializeDateFormatting();
+    PermissionStatus status = await Permission.microphone.request();
+    if (status != PermissionStatus.granted) {
+      throw RecordingPermissionException("Microphone permission not granted");
+    }
   }
 
   @override
@@ -65,16 +69,14 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
 
   @override
   dispose() {
-    super.dispose();
     releaseRecorderSubscriptions();
     releaseRecorder();
+    super.dispose();
   }
 
   releaseRecorderSubscriptions() {
-    if (_recorderSubscription != null) {
-      _recorderSubscription.cancel();
-      _recorderSubscription = null;
-    }
+    _recorderSubscription?.cancel();
+    _recorderSubscription = null;
   }
 
   releaseRecorder() async {
@@ -140,11 +142,7 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       debugPrint('startRecorder error: $err');
       setState(() {
         stopRecorder();
-        this._isRecording = false;
-        if (_recorderSubscription != null) {
-          _recorderSubscription.cancel();
-          _recorderSubscription = null;
-        }
+        releaseRecorderSubscriptions();
       });
     }
   }
