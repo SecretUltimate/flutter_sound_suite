@@ -96,7 +96,7 @@ class SoundPlayerModel with ChangeNotifier {
     });
   }
 
-  startPlayer({@required String path, Codec codec: Codec.aacADTS}) async {
+  startPlayer({@required String path, Codec codec: Codec.amrNB}) async {
     try {
       await _player.startPlayer(
           fromURI: path,

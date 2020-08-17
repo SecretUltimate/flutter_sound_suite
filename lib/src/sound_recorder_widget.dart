@@ -21,7 +21,7 @@ class SoundRecorderWidget extends StatefulWidget {
   final RecordCompleteCallback recordComplete;
   final Codec codec;
 
-  SoundRecorderWidget({@required this.recordComplete, this.codec: Codec.aacADTS});
+  SoundRecorderWidget({@required this.recordComplete, this.codec: Codec.amrNB});
 
   @override
   _SoundRecorderWidgetState createState() => new _SoundRecorderWidgetState();
@@ -41,7 +41,7 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
   FlutterSoundRecorder _recorder = FlutterSoundRecorder();
   StreamSubscription _recorderSubscription;
   double _decibels;
-  Codec _codec = Codec.aacADTS;
+  Codec _codec = Codec.amrNB;
   String _currentFilePath;
   String _currentFileName;
 
