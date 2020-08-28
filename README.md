@@ -6,7 +6,7 @@ a flutter sound suite for record and play voice  easily!
 ### uuid: ^2.2.0
 ### provider: ^4.3.2
 ### path_provider: ^1.6.11
-### flutter_sound: ^5.1.1
+### flutter_sound: 5.0.1
 #### Actually, the following codecs are supported by flutter_sound:
 
 |                 | AAC ADS | Opus OGG | Opus CAF | MP3 | Vorbis OGG | PCM raw| PCM WAV | PCM AIFF | PCM CAF | FLAC | AAC MP4 | AMR-NB | AMR-WB |

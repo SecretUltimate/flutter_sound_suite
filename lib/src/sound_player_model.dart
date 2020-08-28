@@ -31,7 +31,10 @@ class SoundPlayerModel with ChangeNotifier {
   init() async {
     await _player.closeAudioSession();
     await _player.openAudioSession(
-        focus: AudioFocus.requestFocusTransient, category: SessionCategory.playAndRecord, mode: SessionMode.modeDefault, device: AudioDevice.speaker);
+      focus: AudioFocus.requestFocusTransient,
+      category: SessionCategory.playAndRecord,
+      mode: SessionMode.modeDefault,
+    );
     await _player.setSubscriptionDuration(Duration(milliseconds: 10));
   }
 

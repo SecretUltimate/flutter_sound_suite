@@ -51,7 +51,6 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       focus: AudioFocus.requestFocusTransient,
       category: SessionCategory.playAndRecord,
       mode: SessionMode.modeDefault,
-      device: AudioDevice.speaker,
     );
     await _recorder.setSubscriptionDuration(Duration(milliseconds: 10));
     initializeDateFormatting();
