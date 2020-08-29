@@ -10,3 +10,8 @@
 ## [0.0.1+2] 2020.8.28
 
 * rename example project
+
+## [0.0.1+3] 2020.8,29
+
+* unlock flutter_sound's version,but now it only works on version 5.0.1
+* 解锁了flutter_sound的版本，不过目前只能在5.0.1上才能用呀
