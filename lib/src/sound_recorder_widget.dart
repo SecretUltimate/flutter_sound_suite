@@ -228,11 +228,9 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
   insertOverLay(BuildContext context) {
     if (_overlayEntry == null) {
       _overlayEntry = OverlayEntry(builder: (content) {
-        return Positioned(
-          top: MediaQuery.of(context).size.height * 0.5 - 80,
-          left: MediaQuery.of(context).size.width * 0.5 - 80,
+        return Positioned.fill(
           child: Material(
-            type: MaterialType.transparency,
+            color: Colors.transparent,
             child: Center(
               child: Opacity(
                 opacity: 0.8,
@@ -263,7 +261,7 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
                             fontSize: 14,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
