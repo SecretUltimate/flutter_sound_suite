@@ -10,9 +10,7 @@ class SoundPlayerModel with ChangeNotifier {
   FlutterSoundPlayer _player = FlutterSoundPlayer();
   StreamSubscription _playerSubscription;
   double _currentPlayTime = 0.0;
-  double _currentDuration = 0.0;
   double get currentPlayTime => _currentPlayTime;
-  double get currentDuration => _currentDuration;
 
   ///maybe remote or local file path
   String _currentPlayingPath;
@@ -64,9 +62,7 @@ class SoundPlayerModel with ChangeNotifier {
       notifyListeners();
     }
     if (localFile.existsSync()) {
-      Duration duration = await flutterSoundHelper.duration(localPath);
-      _currentDuration = (duration?.inMilliseconds ?? 0) / 1000.0;
-      debugPrint('startOrStopPlayer $_currentPlayingPath download to $localPath _currentDuration $_currentDuration');
+      debugPrint('startOrStopPlayer $_currentPlayingPath download to $localPath');
       if (_player.isStopped) {
         startPlayer(path: localPath, codec: codec);
       } else {

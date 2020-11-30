@@ -38,7 +38,7 @@ class _SoundPlayerWidgetState extends State<SoundPlayerWidget> {
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
                   minHeight: 35,
-                  value: Provider.of<SoundPlayerModel>(context).currentPlayTime / Provider.of<SoundPlayerModel>(context).currentDuration,
+                  value: Provider.of<SoundPlayerModel>(context).currentPlayTime / widget.duration,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade300),
                   backgroundColor: Colors.white,
                 ),
