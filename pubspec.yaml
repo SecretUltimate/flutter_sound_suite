@@ -1,6 +1,6 @@
 name: flutter_sound_suite
 description: a flutter sound suite for record and play voice easily
-version: 0.1.0
+version: 0.1.0+1
 homepage: https://github.com/SecretUltimate/flutter_sound_suite
 
 environment:

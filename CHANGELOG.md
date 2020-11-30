@@ -19,3 +19,6 @@
 ## [0.1.0] 2020.11,27
 * use color: Colors.transparent instead of type: MaterialType.transparency,and fill full screen
 * minSdkVersion 24
+
+## [0.1.0+1] 2020.11,30
+* remove compute duration for current playing uri
