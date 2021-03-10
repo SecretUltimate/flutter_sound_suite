@@ -16,7 +16,7 @@
 * unlock flutter_sound's version,but now it only works on version 5.0.1
 * 解锁了flutter_sound的版本，不过目前只能在5.0.1上才能用呀
 
-## [0.1.0] 2020.11,27
+## [0.1.0] 2020.11.27
 * use color: Colors.transparent instead of type: MaterialType.transparency,and fill full screen
 * minSdkVersion 24
 
@@ -25,3 +25,9 @@
 
 ## [0.1.0+2] 2020.12.10
 * upgrade flutter sound version to 6.4.7+1
+
+## [0.2.0] 2021.3.10
+
+* upgrade flutter sdk version to 2.0.1
+* upgrade flutter sound version to 8.0.0+2
+* null safety support

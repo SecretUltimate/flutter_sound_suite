@@ -21,7 +21,7 @@ class SoundRecorderWidget extends StatefulWidget {
   final RecordCompleteCallback recordComplete;
   final Codec codec;
 
-  SoundRecorderWidget({@required this.recordComplete, this.codec: Codec.amrNB});
+  SoundRecorderWidget({required this.recordComplete, this.codec: Codec.amrNB});
 
   @override
   _SoundRecorderWidgetState createState() => new _SoundRecorderWidgetState();
@@ -34,16 +34,16 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
   String _buttonHint = '按住 说话';
   String _overLayHint = '上滑 取消';
   String _voiceImage = 'assets/voice/volume_1.png';
-  OverlayEntry _overlayEntry;
+  OverlayEntry? _overlayEntry;
   String _recordTime = '00:00:00';
   bool _isRecording = false;
 
   FlutterSoundRecorder _recorder = FlutterSoundRecorder();
-  StreamSubscription _recorderSubscription;
-  double _decibels;
+  StreamSubscription? _recorderSubscription;
+
   Codec _codec = Codec.amrNB;
-  String _currentFilePath;
-  String _currentFileName;
+  late String _currentFilePath;
+  late String _currentFileName;
 
   init() async {
     _codec = widget.codec;
@@ -83,7 +83,7 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       await _recorder.closeAudioSession();
     } catch (e) {
       debugPrint('Released unsuccessful');
-      debugPrint(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -103,35 +103,33 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       );
       debugPrint('startRecorder');
 
-      _recorderSubscription = _recorder.onProgress.listen((event) {
-        if (event != null && event.duration != null) {
-          DateTime date = new DateTime.fromMillisecondsSinceEpoch(event.duration.inMilliseconds, isUtc: true);
-          String txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-          this.setState(() {
-            _recordTime = txt.substring(0, 8);
-            _decibels = event.decibels;
-            if (_decibels > 0.0 && _decibels <= 10.0) {
-              _voiceImage = 'assets/voice/volume_1.png';
-            } else if (_decibels > 10.0 && _decibels <= 20.0) {
-              _voiceImage = 'assets/voice/volume_2.png';
-            } else if (_decibels > 20.0 && _decibels <= 30.0) {
-              _voiceImage = 'assets/voice/volume_3.png';
-            } else if (_decibels > 30.0 && _decibels <= 40.0) {
-              _voiceImage = 'assets/voice/volume_4.png';
-            } else if (_decibels > 40.0 && _decibels <= 50.0) {
-              _voiceImage = 'assets/voice/volume_5.png';
-            } else if (_decibels > 50.0 && _decibels <= 60.0) {
-              _voiceImage = 'assets/voice/volume_6.png';
-            } else if (_decibels > 60.0 && _decibels <= 70.0) {
-              _voiceImage = 'assets/voice/volume_7.png';
-            } else if (_decibels > 70.0) {
-              _voiceImage = 'assets/voice/volume_7.png';
-            } else {
-              _voiceImage = 'assets/voice/volume_1.png';
-            }
-            _overlayEntry?.markNeedsBuild();
-          });
-        }
+      _recorderSubscription = _recorder.onProgress!.listen((event) {
+        DateTime date = new DateTime.fromMillisecondsSinceEpoch(event.duration.inMilliseconds, isUtc: true);
+        String txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+        this.setState(() {
+          _recordTime = txt.substring(0, 8);
+          double _decibels = event.decibels!;
+          if (_decibels > 0.0 && _decibels <= 10.0) {
+            _voiceImage = 'assets/voice/volume_1.png';
+          } else if (_decibels > 10.0 && _decibels <= 20.0) {
+            _voiceImage = 'assets/voice/volume_2.png';
+          } else if (_decibels > 20.0 && _decibels <= 30.0) {
+            _voiceImage = 'assets/voice/volume_3.png';
+          } else if (_decibels > 30.0 && _decibels <= 40.0) {
+            _voiceImage = 'assets/voice/volume_4.png';
+          } else if (_decibels > 40.0 && _decibels <= 50.0) {
+            _voiceImage = 'assets/voice/volume_5.png';
+          } else if (_decibels > 50.0 && _decibels <= 60.0) {
+            _voiceImage = 'assets/voice/volume_6.png';
+          } else if (_decibels > 60.0 && _decibels <= 70.0) {
+            _voiceImage = 'assets/voice/volume_7.png';
+          } else if (_decibels > 70.0) {
+            _voiceImage = 'assets/voice/volume_7.png';
+          } else {
+            _voiceImage = 'assets/voice/volume_1.png';
+          }
+          _overlayEntry?.markNeedsBuild();
+        });
       });
 
       this.setState(() {
@@ -151,9 +149,9 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       await _recorder.stopRecorder();
       debugPrint('stopRecorder');
       releaseRecorderSubscriptions();
-      Duration duration = await flutterSoundHelper.duration(_currentFilePath);
-      if (widget.recordComplete != null && !_isCancel) {
-        widget.recordComplete.call(_currentFilePath, _currentFileName, (duration?.inMilliseconds ?? 0) / 1000.0);
+      Duration? duration = await flutterSoundHelper.duration(_currentFilePath);
+      if (!_isCancel) {
+        widget.recordComplete.call(_currentFilePath, _currentFileName, duration!.inMilliseconds / 1000.0);
       }
     } catch (err) {
       debugPrint('stopRecorder error: $err');
@@ -219,10 +217,9 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
     });
 
     stopRecorder();
-    if (_overlayEntry != null) {
-      _overlayEntry.remove();
-      _overlayEntry = null;
-    }
+
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 
   insertOverLay(BuildContext context) {
@@ -270,7 +267,7 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
           ),
         );
       });
-      Overlay.of(context).insert(_overlayEntry);
+      Overlay.of(context)!.insert(_overlayEntry!);
     }
   }
 

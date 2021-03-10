@@ -12,7 +12,7 @@ class FlutterSoundSuiteApp extends StatefulWidget {
 }
 
 class _FlutterSoundSuiteAppState extends State<FlutterSoundSuiteApp> {
-  List<Map> data = List();
+  List<Map> data = [];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

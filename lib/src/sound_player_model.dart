@@ -8,18 +8,20 @@ import 'package:path_provider/path_provider.dart';
 
 class SoundPlayerModel with ChangeNotifier {
   FlutterSoundPlayer _player = FlutterSoundPlayer();
-  StreamSubscription _playerSubscription;
+  StreamSubscription? _playerSubscription;
   double _currentPlayTime = 0.0;
+
   double get currentPlayTime => _currentPlayTime;
 
   ///maybe remote or local file path
-  String _currentPlayingPath;
+  String? _currentPlayingPath;
 
   Dio dio = Dio(BaseOptions(
     connectTimeout: const Duration(seconds: 10).inMilliseconds,
     receiveTimeout: const Duration(minutes: 60).inMilliseconds,
   ));
   bool _isDownloading = false;
+
   bool get isDownloading => _isDownloading;
 
   SoundPlayerModel() {
@@ -44,11 +46,11 @@ class SoundPlayerModel with ChangeNotifier {
     dio.close(force: true);
   }
 
-  bool isCurrentPlaying({@required String filePath}) => _player.isPlaying && _currentPlayingPath == filePath;
+  bool isCurrentPlaying({required String filePath}) => _player.isPlaying && _currentPlayingPath == filePath;
 
   bool isPlayerStopped() => _player.isStopped;
 
-  startOrStopPlayer({String filePath, String fileName, Codec codec}) async {
+  startOrStopPlayer({required String filePath, required String fileName, required Codec codec}) async {
     _currentPlayingPath = filePath;
     Directory tempDir = await getTemporaryDirectory();
     String localPath = '${tempDir.path}/$fileName';
@@ -81,21 +83,19 @@ class SoundPlayerModel with ChangeNotifier {
       await _player.closeAudioSession();
     } catch (e) {
       debugPrint('Released unsuccessful');
-      debugPrint(e);
+      debugPrint(e.toString());
     }
   }
 
   _addListeners() {
     _releasePlayerSubscriptions();
-    _playerSubscription = _player.onProgress.listen((event) {
-      if (event != null) {
-        _currentPlayTime = event.position.inMilliseconds / 1000.0;
-        notifyListeners();
-      }
+    _playerSubscription = _player.onProgress!.listen((event) {
+      _currentPlayTime = event.position.inMilliseconds / 1000.0;
+      notifyListeners();
     });
   }
 
-  startPlayer({@required String path, Codec codec: Codec.amrNB}) async {
+  startPlayer({required String path, Codec codec: Codec.amrNB}) async {
     try {
       await _player.startPlayer(
           fromURI: path,
