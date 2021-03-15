@@ -59,7 +59,7 @@ class SoundPlayerModel with ChangeNotifier {
     if (!localFile.existsSync()) {
       _isDownloading = true;
       notifyListeners();
-      await dio.download(_currentPlayingPath, localPath);
+      await dio.download(_currentPlayingPath!, localPath);
       _isDownloading = false;
       notifyListeners();
     }
