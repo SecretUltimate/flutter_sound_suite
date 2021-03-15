@@ -32,7 +32,7 @@
 * upgrade flutter sound version to 8.0.0+2
 * null safety support
 
-## [0.2.0+1] 2021.3.15
+## [0.2.0+2] 2021.3.15
 
 * upgrade flutter sound version to 8.0.0+6
 * upgrade dio version to 4.0.0-beta7
