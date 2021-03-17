@@ -13,6 +13,7 @@ class FlutterSoundSuiteApp extends StatefulWidget {
 
 class _FlutterSoundSuiteAppState extends State<FlutterSoundSuiteApp> {
   List<Map> data = [];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -56,7 +57,8 @@ class _FlutterSoundSuiteAppState extends State<FlutterSoundSuiteApp> {
         bottomNavigationBar: SafeArea(
           child: Container(
             height: 70,
-            child: SoundRecorderWidget(recordComplete: (String filePath, String fileName, double duration) {
+            child: SoundRecorderWidget(recordComplete:
+                (String filePath, String fileName, double duration) {
               setState(() {
                 data.add({
                   'filePath': filePath,

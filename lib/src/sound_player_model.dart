@@ -46,16 +46,21 @@ class SoundPlayerModel with ChangeNotifier {
     dio.close(force: true);
   }
 
-  bool isCurrentPlaying({required String filePath}) => _player.isPlaying && _currentPlayingPath == filePath;
+  bool isCurrentPlaying({required String filePath}) =>
+      _player.isPlaying && _currentPlayingPath == filePath;
 
   bool isPlayerStopped() => _player.isStopped;
 
-  startOrStopPlayer({required String filePath, required String fileName, required Codec codec}) async {
+  startOrStopPlayer(
+      {required String filePath,
+      required String fileName,
+      required Codec codec}) async {
     _currentPlayingPath = filePath;
     Directory tempDir = await getTemporaryDirectory();
     String localPath = '${tempDir.path}/$fileName';
     File localFile = File(localPath);
-    debugPrint('startOrStopPlayer $_currentPlayingPath local_exists ${localFile.existsSync()}');
+    debugPrint(
+        'startOrStopPlayer $_currentPlayingPath local_exists ${localFile.existsSync()}');
     if (!localFile.existsSync()) {
       _isDownloading = true;
       notifyListeners();
@@ -64,7 +69,8 @@ class SoundPlayerModel with ChangeNotifier {
       notifyListeners();
     }
     if (localFile.existsSync()) {
-      debugPrint('startOrStopPlayer $_currentPlayingPath download to $localPath');
+      debugPrint(
+          'startOrStopPlayer $_currentPlayingPath download to $localPath');
       if (_player.isStopped) {
         startPlayer(path: localPath, codec: codec);
       } else {
@@ -132,5 +138,6 @@ class SoundPlayerModel with ChangeNotifier {
     notifyListeners();
   }
 
-  seekToPlayer(int milliSeconds) async => await _player.seekToPlayer(Duration(milliseconds: milliSeconds));
+  seekToPlayer(int milliSeconds) async =>
+      await _player.seekToPlayer(Duration(milliseconds: milliSeconds));
 }

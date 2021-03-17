@@ -9,7 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
-typedef RecordCompleteCallback = Function(String filePath, String fileName, double duration);
+typedef RecordCompleteCallback = Function(
+    String filePath, String fileName, double duration);
 
 ///see[Codec]       AAC_ADS Opus_OGG  Opus_CAF  MP3  Vorbis_OGG  PCM_raw  PCM_WAV  PCM_AIFF  PCM_CAF  FLAC  AAC_MP4 AMR-NB  AMR-WB
 ///iOS encoder      Yes     Yes(*)    Yes       No   No          No       Yes      No        Yes      Yes   Yes     NO      NO
@@ -104,7 +105,9 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       debugPrint('startRecorder');
 
       _recorderSubscription = _recorder.onProgress!.listen((event) {
-        DateTime date = new DateTime.fromMillisecondsSinceEpoch(event.duration.inMilliseconds, isUtc: true);
+        DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+            event.duration.inMilliseconds,
+            isUtc: true);
         String txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
         this.setState(() {
           _recordTime = txt.substring(0, 8);
@@ -151,7 +154,8 @@ class _SoundRecorderWidgetState extends State<SoundRecorderWidget> {
       releaseRecorderSubscriptions();
       Duration? duration = await flutterSoundHelper.duration(_currentFilePath);
       if (!_isCancel) {
-        widget.recordComplete.call(_currentFilePath, _currentFileName, duration!.inMilliseconds / 1000.0);
+        widget.recordComplete.call(_currentFilePath, _currentFileName,
+            duration!.inMilliseconds / 1000.0);
       }
     } catch (err) {
       debugPrint('stopRecorder error: $err');
