@@ -4,17 +4,17 @@ a flutter sound suite for record and play voice easily!
 
 ## dependencies:
 
-### dio: ^3.0.10
+### dio: ^4.0.0
 
-### intl: ^0.16.1
+### intl: ^0.17.0
 
-### uuid: ^2.2.0
+### uuid: ^3.0.4
 
-### provider: ^4.3.2
+### provider: ^5.0.0
 
-### path_provider: ^1.6.11
+### path_provider: ^2.0.2
 
-### flutter_sound: ^5.0.1
+### flutter_sound: ^8.1.4
 
 #### Actually, the following codecs are supported by flutter_sound:
 
@@ -35,4 +35,4 @@ Yes(*) : The codec is supported by Flutter Sound, but with a File Format Convers
 
 -------------------------------------------------------------------------------------------------------------------------------------
 
-### permission_handler: ^5.0.1
+### permission_handler: ^8.0.1

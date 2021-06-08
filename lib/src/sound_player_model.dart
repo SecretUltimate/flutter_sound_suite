@@ -28,6 +28,7 @@ class SoundPlayerModel with ChangeNotifier {
     init();
   }
 
+  /// init player
   init() async {
     await _player.closeAudioSession();
     await _player.openAudioSession(
@@ -38,6 +39,7 @@ class SoundPlayerModel with ChangeNotifier {
     await _player.setSubscriptionDuration(Duration(milliseconds: 10));
   }
 
+  /// release resource here
   @override
   dispose() {
     super.dispose();
@@ -46,11 +48,14 @@ class SoundPlayerModel with ChangeNotifier {
     dio.close(force: true);
   }
 
+  /// determine given path is current playing file or not
   bool isCurrentPlaying({required String filePath}) =>
       _player.isPlaying && _currentPlayingPath == filePath;
 
+  /// determine player stopped or not
   bool isPlayerStopped() => _player.isStopped;
 
+  /// start of stop player
   startOrStopPlayer(
       {required String filePath,
       required String fileName,
@@ -101,6 +106,7 @@ class SoundPlayerModel with ChangeNotifier {
     });
   }
 
+  /// start player
   startPlayer({required String path, Codec codec: Codec.amrNB}) async {
     try {
       await _player.startPlayer(
@@ -118,6 +124,7 @@ class SoundPlayerModel with ChangeNotifier {
     notifyListeners();
   }
 
+  /// stop player
   stopPlayer() async {
     try {
       await _player.stopPlayer();
@@ -129,6 +136,7 @@ class SoundPlayerModel with ChangeNotifier {
     notifyListeners();
   }
 
+  /// pause or resume player
   pauseResumePlayer() async {
     if (_player.isPlaying) {
       await _player.pausePlayer();
@@ -138,6 +146,7 @@ class SoundPlayerModel with ChangeNotifier {
     notifyListeners();
   }
 
+  /// seek to player by milliSeconds
   seekToPlayer(int milliSeconds) async =>
       await _player.seekToPlayer(Duration(milliseconds: milliSeconds));
 }
