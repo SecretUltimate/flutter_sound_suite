@@ -1,3 +1,6 @@
+## [2.1.0] 2021.6.8
+* upgrade flutter sdk and plugins
+
 ## [2.0.0] 2021.6.8
 * upgrade flutter sdk and plugins
 
